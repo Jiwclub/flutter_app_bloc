@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
-import 'features/home/presentation/pages/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'routes/app_pages.dart';
 
 void main() {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider<AuthBloc>(
+          create: (BuildContext context) => AuthBloc(),
+        ),
         BlocProvider<HomeBloc>(
           create: (BuildContext context) => HomeBloc(),
         ),
@@ -20,16 +25,16 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // is not restarted.
+        useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      routerConfig: AppPages(context.read<AuthBloc>()).router,
+      // routerConfig: _router,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter_app_test/core/enum/enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,6 +15,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeInitial> {
       : super(
           const HomeInitial(),
         ) {
+    on<Loading>((event, emit) async {
+      await Future.delayed(const Duration(milliseconds: 1000), () {
+        emit(
+          state.copyWith(
+            status: RequestStatus.loaded,
+          ),
+        );
+      });
+    });
     on<Increase>((event, emit) {
       log("Increase ${state.counter}");
 
@@ -25,7 +35,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeInitial> {
       emit(state.copyWith(counter: state.counter - 1));
     });
 
-    on<AddName>((event, emit) {
+    on<AddName>((event, emit) async {
       if (event.name.isEmpty) return;
 
       emit(
@@ -65,6 +75,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeInitial> {
           )
           .toList();
       emit(state.copyWith(nameList: itemDelete));
+    });
+  }
+  void testDeration() {
+    Future.delayed(const Duration(milliseconds: 6), () {
+      log('delayed 5');
     });
   }
 }
